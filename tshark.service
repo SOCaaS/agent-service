@@ -1,0 +1,8 @@
+[Unit]
+Description=Tshark packet capture
+
+[Service]
+ExecStart=/tshark/tshark.sh
+
+[Install]
+WantedBy=multi-user.target

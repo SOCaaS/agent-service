@@ -1,0 +1,3 @@
+[program:tshark]
+command=/bin/bash -c "/usr/bin/tshark -i eth0 -T ek -f 'host 10.0.2.90' > /tshark/packets.json"
+redirect_stderr=true
