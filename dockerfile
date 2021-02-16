@@ -42,6 +42,24 @@ RUN suricata-update
 
 RUN filebeat modules enable suricata
 
+RUN apt install wordpress php libapache2-mod-php mysql-server php-mysql -y
+
+#https://ubuntu.com/tutorials/install-and-configure-wordpress#1-overview
+
+ADD config/wordpress.conf /etc/apache2/sites-available/
+
+RUN a2ensite wordpress
+
+RUN a2enmod rewrite
+
+RUN service apache2 reload
+
+RUN mysql -u root -e "CREATE DATABASE wordpress; GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER -> ON wordpress.* -> TO wordpress@localhost -> IDENTIFIED BY '<whenguardian2021>';
+
+ADD config/config-localhost.php /etc/wordpress/
+
+RUN service mysql start
+
 ADD supervisord /etc/supervisor/conf.d/
 
 RUN sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
