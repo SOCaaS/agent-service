@@ -42,21 +42,21 @@ RUN suricata-update
 
 RUN filebeat modules enable suricata
 
-RUN apt install wordpress php libapache2-mod-php mysql-server php-mysql -y
+# Install wordpress and mysql server
 
-#https://ubuntu.com/tutorials/install-and-configure-wordpress#1-overview
+RUN apt install wget -y
 
-ADD config/wordpress.conf /etc/apache2/sites-available/
+RUN cd /etc; wget https://wordpress.org/latest.tar.gz; tar -xzvf latest.tar.gz
 
-RUN a2ensite wordpress
+ADD config/wp-config.php /etc/wordpress
 
-RUN a2enmod rewrite
+RUN apt install mysql-server
 
-RUN service apache2 reload
+RUN service mysql stop
 
-RUN mysql -u root -e "CREATE DATABASE wordpress; GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER -> ON wordpress.* -> TO wordpress@localhost -> IDENTIFIED BY '<whenguardian2021>';
+RUN usermod -d /var/lib/mysql/ mysql
 
-ADD config/config-localhost.php /etc/wordpress/
+RUN mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
 
 RUN service mysql start
 
