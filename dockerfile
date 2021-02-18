@@ -42,6 +42,27 @@ RUN suricata-update
 
 RUN filebeat modules enable suricata
 
+# Install wordpress, mysql server and apache2
+
+RUN apt update
+
+RUN apt install wordpress -y
+
+RUN apt install apache2 -y
+
+RUN apt install mysql-server -y
+
+ADD /config/wordpress.conf /etc/apache2/sites-available
+
+RUN a2ensite wordpress
+RUN a2enmod rewrite
+
+ADD /config/config-10.0.2.95.php /etc/wordpress
+
+RUN usermod -d /var/lib/mysql/ mysql
+
+RUN mysqld; mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
+
 ADD supervisord /etc/supervisor/conf.d/
 
 RUN sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
