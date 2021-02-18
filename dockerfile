@@ -44,7 +44,7 @@ RUN filebeat modules enable suricata
 
 # Install wordpress, mysql server and apache2
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt update
 
 RUN apt install wordpress -y
 
