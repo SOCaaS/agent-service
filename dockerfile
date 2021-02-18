@@ -57,7 +57,7 @@ ADD /config/wordpress.conf /etc/apache2/sites-available
 RUN a2ensite wordpress
 RUN a2enmod rewrite
 
-ADD /config/config-10.0.2.95.php /etc/wordpress
+ADD /config/config-blog-uow.1ez.xyz.php /etc/wordpress
 
 RUN usermod -d /var/lib/mysql/ mysql
 
