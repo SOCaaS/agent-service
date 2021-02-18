@@ -42,23 +42,32 @@ RUN suricata-update
 
 RUN filebeat modules enable suricata
 
-# Install wordpress and mysql server
+# Install wordpress, mysql server and apache2
 
-RUN apt install wget -y
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN cd /etc; wget https://wordpress.org/latest.tar.gz; tar -xzvf latest.tar.gz
+RUN apt install wordpress -y
 
-ADD config/wp-config.php /etc/wordpress
+RUN apt install apache2 -y
 
-RUN apt install mysql-server
+RUN apt install mysql-server -y
+
+ADD /config/wordpress.conf /etc/apache2/sites-available
+
+RUN a2ensite wordpress
+RUN a2enmod rewrite
+RUN service apache2 reload
+RUN service apache2 restart
+
+ADD /config/config-10.0.2.95.php /etc/wordpress
 
 RUN service mysql stop
 
 RUN usermod -d /var/lib/mysql/ mysql
 
-RUN mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
-
 RUN service mysql start
+
+RUN mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
 
 ADD supervisord /etc/supervisor/conf.d/
 
