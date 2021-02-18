@@ -61,7 +61,7 @@ ADD /config/config-10.0.2.95.php /etc/wordpress
 
 RUN usermod -d /var/lib/mysql/ mysql
 
-RUN mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
+RUN mysqld; mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
 
 ADD supervisord /etc/supervisor/conf.d/
 
