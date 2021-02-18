@@ -56,16 +56,10 @@ ADD /config/wordpress.conf /etc/apache2/sites-available
 
 RUN a2ensite wordpress
 RUN a2enmod rewrite
-RUN service apache2 reload
-RUN service apache2 restart
 
 ADD /config/config-10.0.2.95.php /etc/wordpress
 
-RUN service mysql stop
-
 RUN usermod -d /var/lib/mysql/ mysql
-
-RUN service mysql start
 
 RUN mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
 
