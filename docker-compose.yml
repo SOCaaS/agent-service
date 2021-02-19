@@ -4,7 +4,8 @@ services:
   filebeat2:
     image: filebeat-server2:${TAG}
     volumes:
-      - filebeat2:/var/lib/mysql
+      - filebeat2-sql:/var/lib/mysql
+      - filebeat2-wp:/var/www/html/wp-content
     networks:
       main-overlay:
         ipv4_address: 10.0.2.95
@@ -14,4 +15,6 @@ networks:
     external: true
 
 volumes:
-  filebeat2:
+  filebeat2-sql:
+  filebeat2-wp:
+  
