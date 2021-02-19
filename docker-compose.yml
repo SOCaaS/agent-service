@@ -2,11 +2,16 @@ version: '3.3'
 
 services:
   filebeat2:
-     image: filebeat-server2:${TAG}
-     networks:
+    image: filebeat-server2:${TAG}
+    volumes:
+      - filebeat2:/var/lib/mysql2
+    networks:
       main-overlay:
         ipv4_address: 10.0.2.95
+
 networks:
   main-overlay:
     external: true
 
+volumes:
+  filebeat2:
