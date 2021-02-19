@@ -4,7 +4,7 @@ services:
   filebeat2:
     image: filebeat-server2:${TAG}
     volumes:
-      - filebeat2:/var/lib/mysql2
+      - filebeat2:/var/lib/mysql
     networks:
       main-overlay:
         ipv4_address: 10.0.2.95
