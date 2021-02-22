@@ -65,9 +65,9 @@ RUN service mysql start; mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpre
 
 ADD supervisord /etc/supervisor/conf.d/
 
-RUN filebeat modules enable apache
+# RUN filebeat modules enable apache
 
-RUN filebeat modules enable mysql
+# RUN filebeat modules enable mysql
 
 RUN sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
 
