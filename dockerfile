@@ -20,9 +20,9 @@ RUN apt install -y filebeat
 
 ADD filebeat.yml /etc/filebeat/filebeat.yml
 
-RUN apt install -y tshark
+# RUN apt install -y tshark
 
-RUN mkdir /tshark
+# RUN mkdir /tshark
 
 RUN apt update
 
@@ -32,15 +32,15 @@ RUN add-apt-repository ppa:oisf/suricata-stable -y
 
 RUN apt update && apt upgrade -y
 
-RUN apt install suricata suricata-dbg -y
+# RUN apt install suricata suricata-dbg -y
 
-ADD detect-dos.rules /etc/suricata/rules
+# ADD detect-dos.rules /etc/suricata/rules
 
-ADD suricata.yaml /etc/suricata
+# ADD suricata.yaml /etc/suricata
 
-RUN suricata-update
+# RUN suricata-update
 
-RUN filebeat modules enable suricata
+# RUN filebeat modules enable suricata
 
 # Install wordpress, mysql server and apache2
 

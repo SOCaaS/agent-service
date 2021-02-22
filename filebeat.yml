@@ -18,11 +18,27 @@ filebeat.inputs:
 # you can use different inputs for various configurations.
 # Below are the input specific configurations.
 
-- input_type: log
+- type: log
   paths:
     - "/tshark/packets.json"
   document_type: "pcap_file"
   json.keys_under_root: true
+
+- type: log
+  paths:
+    - "/var/log/apache2/access.log"
+    - "/var/log/apache2/error.log"
+  fields:
+    apache: true
+  fields_under_root: true
+    
+
+- type: log
+  paths:
+    - "/var/log/mysql/error.log"
+  fields:
+    mysql: true
+  fields_under_root: true
 
 - type: log
 
