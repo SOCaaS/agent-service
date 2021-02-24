@@ -47,7 +47,7 @@ output.elasticsearch:
 setup.template.name: "filebeat"
 setup.template.pattern: "filebeat-*"  
 
-  processors:
+processors:
   - add_host_metadata:
       when.not.contains.tags: forwarded
   - add_cloud_metadata: ~
