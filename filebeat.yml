@@ -38,7 +38,7 @@ output.elasticsearch:
   username: "elastic"
   password: "whenguardian2021"
   index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
-  template.enabled: true
+  template.enabled: false
   protocol: "https" 
 
 processors:
