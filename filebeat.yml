@@ -27,7 +27,9 @@ filebeat.inputs:
 # filebeat.config.modules:
 #   path: ${path.config}/modules.d/*.yml
 #   reload.enabled: false
-
+setup.template.enabled: true
+setup.template.name: "filebeat-%{[agent.version]}"
+setup.template.pattern: "filebeat-%{[agent.version]}-*" 
 setup.template.settings:
   index.number_of_shards: 1
   
@@ -40,12 +42,9 @@ output.elasticsearch:
   hosts: ["elasticsearch-uow.1ez.xyz:443"]
   username: "elastic"
   password: "whenguardian2021"
-  index: "filebeat-%{+yyyy-MM-dd}"
+  index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
   template.enabled: false
-  protocol: "https"
-
-setup.template.name: "filebeat"
-setup.template.pattern: "filebeat-*"  
+  protocol: "https" 
 
 processors:
   - add_host_metadata:
