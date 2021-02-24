@@ -40,7 +40,7 @@ output.elasticsearch:
   hosts: ["elasticsearch-uow.1ez.xyz:443"]
   username: "elastic"
   password: "whenguardian2021"
-  index: "packets-webserver01-%{+yyyy-MM-dd}"
+  index: "filebeat-%{+yyyy-MM-dd}"
   template.enabled: false
   protocol: "https"
 
