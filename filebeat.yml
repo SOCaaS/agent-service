@@ -14,7 +14,7 @@ filebeat.inputs:
 
 - type: log
   paths:
-    - "/var/log/mysql/error.log"
+    - "/var/log/mysql/*"
   fields:
     mysql: true
   fields_under_root: true
