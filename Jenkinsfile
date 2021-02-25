@@ -2,14 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Install') {
-            steps {
-                echo 'Installing....'
-                sh 'curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose'
-                sh 'chmod +x /usr/bin/docker-compose'
-                sh '/usr/bin/docker-compose --version'
-            }
-        }
         stage('Build') {
             steps {
                 echo 'Building..'
@@ -17,10 +9,10 @@ pipeline {
                 sh 'docker build --network main-overlay -f dockerfile --tag filebeat-server2:${BUILD_NUMBER} .'
            }
         }
-        stage('Remove') {
+        stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                sh 'TAG=${BUILD_NUMBER} /usr/bin/docker-compose -p "filebeat2" down'
+                sh 'TAG=${BUILD_NUMBER} docker stack deploy --compose-file docker-compose.yml filebeat2'
             }
         }
     }
