@@ -18,6 +18,14 @@ pipeline {
                 sh 'docker build --network main-overlay -f dockerfile --tag filebeat-server2:${BUILD_NUMBER} .'
            }
         }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+                sh 'echo ${BUILD_NUMBER}'
+                sh 'docker run --name test-filebeat-${BUILD_NUMBER} --network main-overlay filebeat-server2:${BUILD_NUMBER} filebeat test config'
+                sh 'docker rm test-nginx-${BUILD_NUMBER}'
+           }
+        }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
