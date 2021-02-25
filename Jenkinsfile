@@ -17,10 +17,10 @@ pipeline {
                 sh 'docker build --network main-overlay -f dockerfile --tag filebeat-server2:${BUILD_NUMBER} .'
            }
         }
-        stage('Deploy') {
+        stage('Remove') {
             steps {
                 echo 'Deploying....'
-                sh 'TAG=${BUILD_NUMBER} /usr/bin/docker-compose -p "filebeat2" up -d --build'
+                sh 'TAG=${BUILD_NUMBER} /usr/bin/docker-compose -p "filebeat2" down'
             }
         }
     }
