@@ -59,6 +59,8 @@ RUN a2enmod rewrite
 
 ADD /config/config-blog-uow.1ez.xyz.php /etc/wordpress
 
+RUN chown -R www-data:www-data /usr/share/wordpress  
+
 RUN usermod -d /var/lib/mysql/ mysql
 
 RUN service mysql start; mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"

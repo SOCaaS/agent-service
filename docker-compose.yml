@@ -5,7 +5,7 @@ services:
     image: filebeat-server2:${TAG}
     volumes:
       - filebeat2-sql:/var/lib/mysql
-      - filebeat2-wp:/var/www/html/wp-content
+      - filebeat2-wp:/usr/share/wordpress/wp-content
     networks:
       main-overlay:
         ipv4_address: 10.0.2.95
