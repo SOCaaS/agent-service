@@ -5,4 +5,5 @@ define('DB_PASSWORD', 'whenguardian2021');
 define('DB_HOST', 'localhost');
 define('DB_COLLATE', 'utf8_general_ci');
 define('WP_CONTENT_DIR', '/usr/share/wordpress/wp-content');
+define('FS_METHOD', 'direct');
 ?>
