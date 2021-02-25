@@ -33,11 +33,13 @@ setup.kibana:
   username: "elastic"
   password: "whenguardian2021"
 
+setup.template.name: "filebeat-%{[agent.version]}"
+setup.template.pattern: "filebeat-%{[agent.version]}-*"
+
 output.elasticsearch:
   hosts: ["elasticsearch-uow.1ez.xyz:443"]
   username: "elastic"
   password: "whenguardian2021"
-  index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
   protocol: "https" 
 
 processors:
