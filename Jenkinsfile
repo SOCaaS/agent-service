@@ -23,7 +23,7 @@ pipeline {
                 echo 'Testing..'
                 sh 'echo ${BUILD_NUMBER}'
                 sh 'docker run --name test-filebeat-${BUILD_NUMBER} --network main-overlay filebeat-server2:${BUILD_NUMBER} filebeat test config'
-                sh 'docker rm test-nginx-${BUILD_NUMBER}'
+                sh 'docker rm test-filebeat-${BUILD_NUMBER}'
            }
         }
         stage('Deploy') {
