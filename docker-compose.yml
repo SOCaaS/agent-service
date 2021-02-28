@@ -1,20 +1,20 @@
 version: '3.3'
 
 services:
-  filebeat2:
-    image: filebeat-server2:${TAG}
+  agent:
+    image: agent:${TAG}
     volumes:
-      - filebeat2-sql:/var/lib/mysql
-      - filebeat2-wp:/usr/share/wordpress/wp-content
+      - agent-sql:/var/lib/mysql
+      - agent-wp:/usr/share/wordpress/wp-content
     networks:
       main-overlay:
-        ipv4_address: 10.0.2.95
+        ipv4_address: 10.0.2.98
 
 networks:
   main-overlay:
     external: true
 
 volumes:
-  filebeat2-sql:
-  filebeat2-wp:
+  agent-sql:
+  agent-wp:
   
