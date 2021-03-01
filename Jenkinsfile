@@ -32,6 +32,55 @@ pipeline {
         //         sh 'TAG=${BUILD_NUMBER} /usr/bin/docker-compose -p "agent" up -d --build'
         //     }
         // }
+        stage('Create / Delete') {
+            agent {
+                docker {
+                    image 'base/terraform:latest'
+                    args  '-v /root/tfstate:/root/tfstate -v /root/tfvars:/root/tfvars'
+                }
+            }
+            steps {
+                echo 'Terraform Creating Server'
+                sh 'terraform --version'
+                dir("deployment") {
+                    sh '''#!/bin/bash
+                        terraform init
+                        terraform plan  -var-file=/root/tfvars/do-contabo.tfvars
+                        terraform apply -var-file=/root/tfvars/do-contabo.tfvars --auto-approve
+                        terraform show
+                    '''
+                }
+                echo 'Finished'
+            }
+        }
+        stage('Rebuild') {
+            agent {
+                docker {
+                    image 'base/digitalocean-doctl:latest' 
+                    args  '-v /root/tfstate:/root/tfstate -v /home/ezeutno/.ssh/id_rsa:/root/.ssh/id_rsa'
+                }
+            }
+            steps {
+                sh 'ls -lah /root/.ssh'
+                sh '''#!/bin/bash
+                    if [ $(cat /root/tfstate/agent-do.tfstate | jq \'.["outputs"]["ids"]["value"][0]\') == null ] 
+                    then 
+                        echo "The server is being turn off!"; 
+                    else
+                        echo -e "\nDO Re-Build!"
+                        doctl compute droplet-action rebuild $(cat /root/tfstate/agent-do.tfstate | jq \'.["outputs"]["ids"]["value"][0]\' | sed \'s|"||g\' ) -t ${DIGITALOCEAN_TOKEN} --image ubuntu-20-04-x64 --wait
+                        echo -e "\nPing Finished!"
+                        ping -c 10 $(cat /root/tfstate/agent-do.tfstate | jq \'.["outputs"]["ips"]["value"][0]\' | sed \'s|"||g\' )
+                        
+                        echo -e "\nCopy data to DigitalOcean!"
+                        scp -o StrictHostKeyChecking=no -i /root/.ssh/id_rsa -r $PWD root@$(cat /root/tfstate/agent-do.tfstate | jq \'.["outputs"]["ips"]["value"][0]\' | sed \'s|"||g\' ):/root/snort/
+                        
+                        echo -e "\nStart SSH Script!"
+                        ssh -o StrictHostKeyChecking=no -i /root/.ssh/id_rsa root@$(cat /root/tfstate/agent-do.tfstate | jq \'.["outputs"]["ips"]["value"][0]\' | sed \'s|"||g\' ) "cd /root/snort/; ./start.sh"
+                    fi 
+                '''
+                echo 'Finished'
+            }
     }
     post {
         success {
