@@ -8,7 +8,10 @@ services:
       - agent-wp:/usr/share/wordpress/wp-content
     networks:
       main-overlay:
-        ipv4_address: 10.0.2.98
+        ipv4_address: ${HOST_IP}
+    build:
+        args:
+            TSHARK_INTERFACE: ${TSHARK_INTERFACE}
 
 networks:
   main-overlay:
