@@ -11,8 +11,9 @@ services:
         ipv4_address: ${HOST_IP}
     build:
         args:
-            TSHARK_INTERFACE: ${TSHARK_INTERFACE}
+            INTERFACE: ${INTERFACE}
             URL: ${URL}
+            HOST_IP: ${HOST_IP}
 
 networks:
   main-overlay:

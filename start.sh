@@ -42,7 +42,7 @@ cp tshark.service /etc/systemd/system/
 echo "create /tshark"
 mkdir /tshark
 
-sed -i "s/{{ TSHARK_INTERFACE }}/$TSHARK_INTERFACE/g" tshark.sh
+sed -i "s/{{ TSHARK_INTERFACE }}/$INTERFACE/g" tshark.sh
 chmod +x tshark.sh
 cp tshark.sh /tshark
 
@@ -52,13 +52,13 @@ apt update
 
 apt install suricata suricata-dbg -y
 
+sed -i "s/{{ HOST_IP }}/[$HOST_IP]/g" suricata.yaml
+
 cp detect-dos.rules /etc/suricata/rules
 
 cp suricata.yaml /etc/suricata
 
 suricata-update
-
-filebeat modules enable suricata
 
 service filebeat start
 
@@ -81,3 +81,4 @@ service apache2 restart
 cp config/config.php /etc/wordpress/config-$URL.php
 
 chown -R www-data:www-data /usr/share/wordpress
+
