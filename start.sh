@@ -66,7 +66,7 @@ apt -y install mysql-server
 
 apt -y install wordpress
 
-apt -y install apache
+apt -y install apache2
 
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
 
