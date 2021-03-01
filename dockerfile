@@ -1,8 +1,10 @@
 FROM base/ubuntu-supervisor:latest
 
-ARG TSHARK_INTERFACE
+ARG INTERFACE
 
 ARG URL
+
+ARG HOST_IP
 
 LABEL type="agent-service"
 
@@ -28,6 +30,8 @@ RUN apt install -y tshark
 
 RUN mkdir /tshark
 
+RUN sed -i "s/{{ TSHARK_INTERFACE }}/$INTERFACE/g" tshark.sh
+
 RUN apt update
 
 RUN apt-get install software-properties-common -y
@@ -43,6 +47,8 @@ ADD detect-dos.rules /etc/suricata/rules
 ADD suricata.yaml /etc/suricata
 
 RUN suricata-update
+
+RUN sed -i "s/{{ HOST_IP }}/[$HOST_IP]/g" /etc/suricata/suricata.yaml
 
 # RUN filebeat modules enable suricata
 
@@ -75,6 +81,10 @@ ADD supervisord /etc/supervisor/conf.d/
 # RUN filebeat modules enable apache
 
 # RUN filebeat modules enable mysql
+
+RUN sed -i "s/{{ SURICATA_INTERFACE }}/$INTERFACE/g" /etc/supervisord/suricata.conf
+
+RUN sed -i "s/{{ TSHARK_INTERFACE }}/$INTERFACE/g" /etc/supervisord/tshark.conf
 
 RUN sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
 
