@@ -2,7 +2,9 @@ FROM base/ubuntu-supervisor:latest
 
 ARG TSHARK_INTERFACE
 
-LABEL type="filebeat2"
+ARG URL
+
+LABEL type="agent-service"
 
 RUN apt update
 
