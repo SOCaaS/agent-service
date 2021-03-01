@@ -3,6 +3,15 @@ set -e
 apt update
 apt upgrade -y
 
+if [ -f .env ]
+then
+    echo -e "\nImporting .env to Environment Variable"
+    set -o allexport; source .env; set +o allexport
+else 
+    echo -e "\nThere is no env file!"
+    exit 1
+fi
+
 # install filebeat https://www.elastic.co/guide/en/beats/filebeat/current/setup-repositories.html
 echo "Installing filebeat"
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
@@ -27,6 +36,7 @@ cp tshark.service /etc/systemd/system/
 echo "create /tshark"
 mkdir /tshark
 
+sed -i "s/{{ TSHARK_INTERFACE }}/$TSHARK_INTERFACE/g" tshark.sh
 chmod +x tshark.sh
 cp tshark.sh /tshark
 
