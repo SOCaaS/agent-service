@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
+set -x
+
+echo -e "\nUpdate and Upgrade"
 apt update
-apt upgrade -y
+apt-get -o Dpkg::Options::='--force-confold' --force-yes -fuy dist-upgrade
+
+echo -e "\nNameserver to Cloudflare"
+sed -i -e "s|nameserver.*|nameserver 1.1.1.1|g" /etc/resolv.conf
 
 if [ -f .env ]
 then
@@ -55,3 +61,23 @@ suricata-update
 filebeat modules enable suricata
 
 service filebeat start
+
+apt -y install mysql-server
+
+apt -y install wordpress
+
+apt -y install apache
+
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
+
+cp config/wordpress.conf /etc/apache2/sites-available
+
+a2ensite wordpress
+
+a2enmod rewrite
+
+service apache2 restart
+
+cp config/config.php /etc/wordpress/config-$URL.php
+
+chown -R www-data:www-data /usr/share/wordpress
