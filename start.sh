@@ -34,7 +34,7 @@ echo "replacing filebeat.yml"
 cp filebeat.yml /etc/filebeat/filebeat.yml
 
 echo "installing tshark"
-apt install -y tshark
+DEBIAN_FRONTEND=noninteractive apt install -y tshark
 
 echo "copy tshark.service to /etc/systemd/system"
 cp tshark.service /etc/systemd/system/
