@@ -1,5 +1,7 @@
 FROM base/ubuntu-supervisor:latest
 
+ARG 
+
 LABEL type="filebeat2"
 
 RUN apt update
@@ -52,12 +54,12 @@ RUN apt install apache2 -y
 
 RUN apt install mysql-server -y
 
-ADD /config/wordpress.conf /etc/apache2/sites-available
+ADD config/wordpress.conf /etc/apache2/sites-available
 
 RUN a2ensite wordpress
 RUN a2enmod rewrite
 
-ADD /config/config-blog-uow.1ez.xyz.php /etc/wordpress
+ADD config/config-blog-uow.1ez.xyz.php /etc/wordpress
 
 RUN chown -R www-data:www-data /usr/share/wordpress  
 
