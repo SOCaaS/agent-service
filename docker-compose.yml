@@ -12,6 +12,7 @@ services:
     build:
         args:
             TSHARK_INTERFACE: ${TSHARK_INTERFACE}
+            URL: ${URL}
 
 networks:
   main-overlay:
