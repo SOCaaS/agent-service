@@ -1,7 +1,12 @@
 #!/bin/bash
 set -e
+
+echo -e "\nUpdate and Upgrade"
 apt update
-apt upgrade -y
+apt-get -o Dpkg::Options::='--force-confold' --force-yes -fuy dist-upgrade
+
+echo -e "\nNameserver to Cloudflare"
+sed -i -e "s|nameserver.*|nameserver 1.1.1.1|g" /etc/resolv.conf
 
 # install filebeat https://www.elastic.co/guide/en/beats/filebeat/current/setup-repositories.html
 echo "Installing filebeat"
