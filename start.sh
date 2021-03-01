@@ -60,8 +60,6 @@ cp suricata.yaml /etc/suricata
 
 suricata-update
 
-filebeat modules enable suricata
-
 service filebeat start
 
 apt -y install mysql-server
