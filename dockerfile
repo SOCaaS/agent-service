@@ -1,6 +1,6 @@
 FROM base/ubuntu-supervisor:latest
 
-ARG=TSHARK_INTERFACE
+ARG TSHARK_INTERFACE
 
 LABEL type="filebeat2"
 
