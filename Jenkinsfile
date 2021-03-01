@@ -81,6 +81,7 @@ pipeline {
                 '''
                 echo 'Finished'
             }
+        }
     }
     post {
         success {
