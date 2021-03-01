@@ -1,5 +1,7 @@
 FROM base/ubuntu-supervisor:latest
 
+ARG=TSHARK_INTERFACE
+
 LABEL type="filebeat2"
 
 RUN apt update

@@ -9,6 +9,9 @@ services:
     networks:
       main-overlay:
         ipv4_address: $HOST_IP
+    build:
+        args:
+            TSHARK_INTERFACE = $TSHARK_INTERFACE
 
 networks:
   main-overlay:
