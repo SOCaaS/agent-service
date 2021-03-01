@@ -27,6 +27,7 @@ cp tshark.service /etc/systemd/system/
 echo "create /tshark"
 mkdir /tshark
 
+sed -i "s/changeme/$TSHARK_INTERFACE/g" tshark.sh
 chmod +x tshark.sh
 cp tshark.sh /tshark
 
