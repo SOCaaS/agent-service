@@ -30,8 +30,6 @@ RUN apt install -y tshark
 
 RUN mkdir /tshark
 
-RUN sed -i "s/{{ TSHARK_INTERFACE }}/$INTERFACE/g" tshark.sh
-
 RUN apt update
 
 RUN apt-get install software-properties-common -y
@@ -85,6 +83,8 @@ ADD supervisord /etc/supervisor/conf.d/
 RUN sed -i "s/{{ SURICATA_INTERFACE }}/$INTERFACE/g" /etc/supervisord/suricata.conf
 
 RUN sed -i "s/{{ TSHARK_INTERFACE }}/$INTERFACE/g" /etc/supervisord/tshark.conf
+
+RUN sed -i "s/{{ HOST_IP }}/[$HOST_IP]/g" /etc/supervisord/tshark.conf
 
 RUN sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
 

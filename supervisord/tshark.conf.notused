@@ -1,3 +1,0 @@
-[program:tshark]
-command=/bin/bash -c "/usr/bin/tshark -i {{ TSHARK_INTERFACE }} -T ek -f 'host 10.0.2.95' > /tshark/packets.json"
-redirect_stderr=true
