@@ -10,10 +10,11 @@ services:
       main-overlay:
         ipv4_address: ${HOST_IP}
     build:
+      context: .
       args:
-          INTERFACE: ${INTERFACE}
-          URL: ${URL}
-          HOST_IP: ${HOST_IP}
+        INTERFACE: ${INTERFACE}
+        URL: ${URL}
+        HOST_IP: ${HOST_IP}
 
 networks:
   main-overlay:
