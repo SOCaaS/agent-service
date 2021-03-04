@@ -44,7 +44,7 @@ ADD detect-dos.rules /etc/suricata/rules
 
 ADD suricata.yaml /etc/suricata
 
-RUN sed -i "s/{{ HOST_IP }}/[$HOST_IP]/g" /etc/suricata/suricata.yaml
+RUN sed -i "s/{{ HOST_IP }}/$HOST_IP/g" /etc/suricata/suricata.yaml
 
 RUN suricata-update
 
@@ -84,7 +84,7 @@ RUN sed -i "s/{{ SURICATA_INTERFACE }}/$INTERFACE/g" /etc/supervisord/suricata.c
 
 RUN sed -i "s/{{ TSHARK_INTERFACE }}/$INTERFACE/g" /etc/supervisord/tshark.conf
 
-RUN sed -i "s/{{ HOST_IP }}/[$HOST_IP]/g" /etc/supervisord/tshark.conf
+RUN sed -i "s/{{ HOST_IP }}/$HOST_IP/g" /etc/supervisord/tshark.conf
 
 RUN sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
 
