@@ -46,6 +46,8 @@ ADD suricata.yaml /etc/suricata
 
 RUN sed -i "s/{{ HOST_IP }}/$HOST_IP/g" /etc/suricata/suricata.yaml
 
+RUN cat /etc/suricata/suricata.yaml
+
 RUN suricata-update
 
 # RUN filebeat modules enable suricata
