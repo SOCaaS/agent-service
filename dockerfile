@@ -82,11 +82,11 @@ ADD supervisord /etc/supervisor/conf.d/
 
 # RUN filebeat modules enable mysql
 
-RUN sed -i "s/{{ SURICATA_INTERFACE }}/$INTERFACE/g" /etc/supervisord/suricata.conf
+RUN sed -i "s/{{ SURICATA_INTERFACE }}/$INTERFACE/g" /etc/supervisor/conf.d/suricata.conf
 
-RUN sed -i "s/{{ TSHARK_INTERFACE }}/$INTERFACE/g" /etc/supervisord/tshark.conf
+RUN sed -i "s/{{ TSHARK_INTERFACE }}/$INTERFACE/g" /etc/supervisor/conf.d/tshark.conf
 
-RUN sed -i "s/{{ HOST_IP }}/$HOST_IP/g" /etc/supervisord/tshark.conf
+RUN sed -i "s/{{ HOST_IP }}/$HOST_IP/g" /etc/supervisor/conf.d/tshark.conf
 
 RUN sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
 
