@@ -67,7 +67,7 @@ pipeline {
                 sh '''#!/bin/bash
                     if [ $(cat /root/tfstate/agent-service-do.tfstate | jq \'.["outputs"]["ids"]["value"][0]\') == null ] 
                     then 
-                        echo "The server is being turn off!"; 
+                        echo "The server is turn off!"; 
                     else
                         echo -e "\nDO Re-Build!"
                         doctl compute droplet-action rebuild $(cat /root/tfstate/agent-service-do.tfstate | jq \'.["outputs"]["ids"]["value"][0]\' | sed \'s|"||g\' ) -t ${DIGITALOCEAN_TOKEN} --image ubuntu-20-04-x64 --wait
