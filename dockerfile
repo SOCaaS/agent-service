@@ -68,7 +68,9 @@ RUN a2ensite wordpress
 
 RUN a2enmod rewrite
 
-ADD config/config.php /etc/wordpress/config-$URI.php
+ADD config/config.php /etc/wordpress/config.php
+
+RUN mv /etc/wordpress/config.php /etc/wordpress/config-$URL.php
 
 RUN chown -R www-data:www-data /usr/share/wordpress  
 
