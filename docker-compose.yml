@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   agent:
-    image: agent:${TAG}
+    image: agent-service:${TAG}
     volumes:
       - agent-sql:/var/lib/mysql
       - agent-wp:/usr/share/wordpress/wp-content
@@ -10,10 +10,10 @@ services:
       main-overlay:
         ipv4_address: ${HOST_IP}
     build:
-        args:
-            INTERFACE: ${INTERFACE}
-            URL: ${URL}
-            HOST_IP: ${HOST_IP}
+      args:
+          INTERFACE: ${INTERFACE}
+          URL: ${URL}
+          HOST_IP: ${HOST_IP}
 
 networks:
   main-overlay:

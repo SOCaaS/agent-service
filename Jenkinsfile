@@ -17,7 +17,7 @@ pipeline {
             steps {
                 echo 'Building..'
                 sh 'echo ${BUILD_NUMBER}'
-                sh 'docker build --network main-overlay -f dockerfile --tag agent-service:${BUILD_NUMBER} .'
+                sh 'TAG=${BUILD_NUMBER} /usr/bin/docker-compose -p "agent" build'
            }
         }
         stage('Test') {
