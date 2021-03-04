@@ -44,9 +44,9 @@ ADD detect-dos.rules /etc/suricata/rules
 
 ADD suricata.yaml /etc/suricata
 
-RUN suricata-update
-
 RUN sed -i "s/{{ HOST_IP }}/[$HOST_IP]/g" /etc/suricata/suricata.yaml
+
+RUN suricata-update
 
 # RUN filebeat modules enable suricata
 
