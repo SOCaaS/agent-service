@@ -26,6 +26,10 @@ RUN apt install -y filebeat
 
 ADD filebeat.yml /etc/filebeat/filebeat.yml
 
+RUN sed -i "s/{{ LOGSTASH_URI }}/$LOGSTASH_URI/g" /etc/filebeat/filebeat.yml
+
+RUN sed -i "s/{{ LOGSTASH_PORT }}/$LOGSTASH_PORT/g" /etc/filebeat/filebeat.yml
+
 RUN apt install -y tshark
 
 RUN mkdir /tshark
