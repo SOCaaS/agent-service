@@ -6,6 +6,10 @@ ARG URL
 
 ARG HOST_IP
 
+ARG LOGSTASH_PORT
+
+ARG LOGSTASH_URI
+
 LABEL type="agent-service"
 
 RUN apt update
