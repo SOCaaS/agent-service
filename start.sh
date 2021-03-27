@@ -33,6 +33,8 @@ apt update
 apt install -y filebeat
 
 echo "replacing filebeat.yml"
+sed -i "s/{{ LOGSTASH_URI }}/$LOGSTASH_URI/g" filebeat.yml
+sed -i "s/{{ LOGSTASH_PORT }}/$LOGSTASH_PORT/g" filebeat.yml
 cp filebeat.yml /etc/filebeat/filebeat.yml
 
 echo "installing tshark"
