@@ -18,6 +18,8 @@ else
     exit 1
 fi
 
+HOST_IP=$(ip -4 addr show $INTERFACE | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
+
 # install filebeat https://www.elastic.co/guide/en/beats/filebeat/current/setup-repositories.html
 echo "Installing filebeat"
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
