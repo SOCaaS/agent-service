@@ -11,8 +11,8 @@ sed -i -e "s|nameserver.*|nameserver 1.1.1.1|g" /etc/resolv.conf
 
 if [ -f .env ]
 then
-    echo -e "\nImporting .env to Environment Variable"
-    set -o allexport; source .env; set +o allexport
+    echo -e "\nImporting .do.env to Environment Variable"
+    set -o allexport; source .do.env; set +o allexport
 else 
     echo -e "\nThere is no env file!"
     exit 1
