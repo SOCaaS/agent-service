@@ -98,6 +98,8 @@ RUN sed -i "s/{{ TSHARK_INTERFACE }}/$INTERFACE/g" /etc/supervisor/conf.d/tshark
 
 RUN sed -i "s/{{ HOST_IP }}/$HOST_IP/g" /etc/supervisor/conf.d/tshark.conf
 
+RUN mv /etc/supervisor/conf.d/tshark.conf /etc/supervisor/conf.d/tshark.conf.notused
+
 RUN sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
 
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
