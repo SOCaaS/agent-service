@@ -67,7 +67,8 @@ cp suricata.yaml /etc/suricata
 suricata-update
 
 echo "Run suricata service on daemon for alerting"
-sed -i "s/{{ INTERFACE }}/$INTERFACE/g" suricata.yaml
+
+sed -i "s/{{ INTERFACE }}/$INTERFACE/g" suricata.service
 
 cp suricata.service /etc/systemd/system/
 
