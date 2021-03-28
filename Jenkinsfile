@@ -80,6 +80,7 @@ pipeline {
                         echo -e "\nPing Finished!"
                         ping -c 10 $(cat /root/tfstate/agent-service-do.tfstate | jq \'.["outputs"]["ips"]["value"][0]\' | sed \'s|"||g\' )
                         
+                        rm -rf .git
                         echo -e "\nCopy data to DigitalOcean!"
                         scp -o StrictHostKeyChecking=no -i /root/.ssh/id_rsa -r $PWD root@$(cat /root/tfstate/agent-service-do.tfstate | jq \'.["outputs"]["ips"]["value"][0]\' | sed \'s|"||g\' ):/root/agent/
                         
