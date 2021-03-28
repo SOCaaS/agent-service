@@ -1808,11 +1808,10 @@ napatech:
 ## file configuration".
 ##
 
-default-rule-path: /etc/suricata/rules
-
+default-rule-path: /etc/suricata/rules/
 rule-files:
-##  - suricata.rules
   - detect-dos.rules
+##  - suricata.rules
 ##
 ## Auxiliary configuration files.
 ##
