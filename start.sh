@@ -73,7 +73,7 @@ cp suricata.service /etc/systemd/system/
 
 systemctl daemon-reload
 
-systemctl suricata.service
+systemctl start suricata.service
 
 service filebeat start
 
