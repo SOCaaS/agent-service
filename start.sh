@@ -66,6 +66,15 @@ cp suricata.yaml /etc/suricata
 
 suricata-update
 
+echo "Run suricata service on daemon for alerting"
+sed -i "s/{{ INTERFACE }}/$INTERFACE/g" suricata.yaml
+
+cp suricata.service /etc/systemd/system/
+
+systemctl daemon-reload
+
+systemctl suricata.service
+
 service filebeat start
 
 apt -y install mysql-server

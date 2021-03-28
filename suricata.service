@@ -1,0 +1,8 @@
+[Unit]
+Description=Suricata Service
+
+[Service]
+ExecStart=/usr/bin/suricata -c /etc/suricata/suricata.yaml -i {{ INTERFACE }}
+
+[Install]
+WantedBy=multi-user.target

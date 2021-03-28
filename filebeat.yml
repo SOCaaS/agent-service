@@ -20,6 +20,10 @@ filebeat.inputs:
 
 - type: log
   paths:
+    - "/var/log/suricata/fast.log"
+
+- type: log
+  paths:
     - "/var/log/mysql/*"
   fields:
     mysql: true
