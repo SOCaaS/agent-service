@@ -68,13 +68,13 @@ suricata-update
 
 echo "Run suricata service on daemon for alerting"
 
-sed -i "s/{{ INTERFACE }}/$INTERFACE/g" suricata.service
+sed -i "s/{{ INTERFACE }}/$INTERFACE/g" suricatadaemon.service
 
-cp suricata.service /etc/systemd/system/
+cp suricatadaemon.service /etc/systemd/system/
 
 systemctl daemon-reload
 
-systemctl start suricata.service
+systemctl start suricatadaemon.service
 
 service filebeat start
 
