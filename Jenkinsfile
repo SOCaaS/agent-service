@@ -8,9 +8,15 @@ pipeline {
         stage('Install') {
             steps {
                 echo 'Installing....'
-                sh 'curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose'
-                sh 'chmod +x /usr/bin/docker-compose'
-                sh '/usr/bin/docker-compose --version'
+                sh '''#!/bin/bash
+                    if [ ! -f /usr/bin/docker-compose ]; then
+                        curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
+                        chmod +x /usr/bin/docker-compose
+                        /usr/bin/docker-compose --version
+                    else 
+                        echo "There is noting to be downloaded!"
+                    fi
+                '''
             }
         }
         stage('Build') {
