@@ -15,6 +15,7 @@ filebeat.inputs:
 - type: log
   paths:
     - "/var/log/suricata/eve.json"
+    
   json.keys_under_root: true
 
 - type: log
