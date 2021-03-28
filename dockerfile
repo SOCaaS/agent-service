@@ -54,6 +54,8 @@ ADD suricata.yaml /etc/suricata
 
 RUN sed -i "s/{{ HOST_IP }}/$HOST_IP/g" /etc/suricata/suricata.yaml
 
+RUN sed -i "s/{{ INTERFACE }}/$INTERFACE/g" /etc/suricata/suricata.yaml
+
 RUN head -n 20 /etc/suricata/suricata.yaml
 
 RUN suricata-update

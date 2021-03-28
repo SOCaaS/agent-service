@@ -57,6 +57,7 @@ apt update
 apt install suricata suricata-dbg -y
 
 sed -i "s/{{ HOST_IP }}/$HOST_IP/g" suricata.yaml
+sed -i "s/{{ INTERFACE }}/$INTERFACE/g" suricata.yml
 
 cp detect-dos.rules /etc/suricata/rules
 
