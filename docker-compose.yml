@@ -17,6 +17,7 @@ services:
         HOST_IP: ${HOST_IP}
         LOGSTASH_URI: ${LOGSTASH_URI}
         LOGSTASH_PORT: ${LOGSTASH_PORT}
+        DOCKER_URL: ${DOCKER_URL}
 
 networks:
   main-overlay:

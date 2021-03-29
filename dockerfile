@@ -1,14 +1,11 @@
 FROM base/ubuntu-supervisor:latest
 
 ARG INTERFACE
-
 ARG URL
-
 ARG HOST_IP
-
 ARG LOGSTASH_PORT
-
 ARG LOGSTASH_URI
+ARG DOCKER_URL
 
 LABEL type="agent-service"
 
@@ -81,6 +78,8 @@ RUN a2enmod rewrite
 ADD config/config.php /etc/wordpress/config.php
 
 RUN mv /etc/wordpress/config.php /etc/wordpress/config-$URL.php
+
+RUN mv /etc/wordpress/config.php /etc/wordpress/config-$DOCKER_URL.php
 
 RUN chown -R www-data:www-data /usr/share/wordpress  
 
