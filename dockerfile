@@ -77,7 +77,7 @@ RUN a2enmod rewrite
 
 ADD config/config.php /etc/wordpress/config.php
 
-RUN mv /etc/wordpress/config.php /etc/wordpress/config-$URL.php
+RUN cp /etc/wordpress/config.php /etc/wordpress/config-$URL.php
 
 RUN mv /etc/wordpress/config.php /etc/wordpress/config-$DOCKER_URL.php
 
