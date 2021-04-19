@@ -98,3 +98,10 @@ cp config/config.php /etc/wordpress/config-$URL.php
 
 chown -R www-data:www-data /usr/share/wordpress
 
+
+# setup and run daemon
+chmod +x agentServiceDaemon/dependencies.sh
+
+./agentServiceDaemon/dependencies.sh
+
+# python3 agentServiceDaemon/agentServiceDaemon.py
