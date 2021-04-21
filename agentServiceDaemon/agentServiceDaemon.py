@@ -1,4 +1,4 @@
-import requests, json, time, dotenv, os
+import requests, json, time, dotenv, os, subprocess, shlex
 # use subprocess
 flag = True
 
@@ -18,6 +18,14 @@ tshark_rules = [{}]
 old_suricata_rulelist = [{}]
 tshark_status = False
 suricata_status = False
+counter = 0
+
+# build tshark_rules
+req = requests.get(hostname + "/api/agent_controller/" + agent_id, auth=(username, password))
+agent_dict = json.loads(req.text)
+for i in agent_dict["services"]["tshark"]["rules"]:
+    tshark_rules[counter]["active"] = False
+    counter += 1
 
 while flag:
     # request from api
@@ -32,7 +40,6 @@ while flag:
 
     # convert json into dict
     agent_dict = json.loads(req.text)
-    flag = False
 
     # used for iteration
     counter = 0
@@ -44,27 +51,48 @@ while flag:
         # iterate over the tshark rules
         for i in agent_dict["services"]["tshark"]["rules"]:
             i["details"].replace("$interface", agent_dict["interface"])
-            # check if new rule is same as old
+            
+            # check if old and new is the same
             if i["active"] == tshark_rules[counter]["active"] and i["details"] == tshark_rules[counter]["details"]:
                 continue
-
-            # check if rule is same
-            elif i["details"] == tshark_rules[counter]["details"]:
-                tshark_rules[counter]["active"] = i["active"]
-                
-                if i["active"] == True:
-                    # run i["details"]
-                else:
-                    # stop i["details"]
             
+            # check if both old and new is inactive
+            elif i["active"] == tshark_rules[counter]["active"] and i["active"] == False:
+                continue
+
+            # apply changes
             else:
+                if tshark_rules[counter]["active"] == True:
+                    tshark_rules[counter]["process"].terminate()
                 tshark_rules[counter]["active"] = i["active"]
                 tshark_rules[counter]["details"] = i["details"]
                 
+                
                 if i["active"] == True:
-                    # run i["details"]
+                    
+                    try:
+                        # run process
+                        process_details = shlex.split(i["details"])
+                        tshark_rules[counter]["process"] = subprocess.Popen(process_details)
+
+                        # check if process does not run
+                        if tshark_rules[counter]["process"].poll() != None:
+                            print("Tshark error at rule " + str(counter) + ": " +  i["details"])
+                            tshark_rules[counter]["active"] = False
+
+                    except:
+                        print("Tshark error at rule " + str(counter) + ": " +  i["details"])
+                        tshark_rules[counter]["active"] = False
+                    
                 else:
-                    # stop i["details"]
+                    try:
+                        # check if process is running
+                        if tshark_rules[counter]["process"].poll() == None:
+                            # try to terminate
+                            tshark_rules[counter]["process"].terminate()
+                    except:
+                        print("Unable to terminate rule " + str(counter) + ": " +  i["details"])
+                                
 
             counter += 1
     
@@ -75,7 +103,7 @@ while flag:
         # turn everything off
         for i in tshark_rules:
             if i["active"] == True:
-                # turn off
+                i["process"].terminate()
                 i["active"] = False
             
     
