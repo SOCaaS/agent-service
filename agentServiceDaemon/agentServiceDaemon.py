@@ -18,6 +18,7 @@ tshark_rules = [{}]
 old_suricata_rulelist = [{}]
 tshark_status = False
 suricata_status = False
+suricata_process = ""
 counter = 0
 
 # build tshark_rules
@@ -105,13 +106,10 @@ while flag:
             if i["active"] == True:
                 i["process"].terminate()
                 i["active"] = False
-            
-    
-
 
     # check if suricata is active
     if agent_dict["services"]["suricata"]["active"]:
-        suricata_status = True
+        
         suricata_rulelist = []
 
         # iterate over suricata rules
@@ -120,7 +118,8 @@ while flag:
                 continue
             else:
                 suricata_rulelist.append(i["details"].replace("$interface", agent_dict["interface"]))
-            
+        
+        # check for changes and apply changes to file
         if suricata_rulelist != old_suricata_rulelist:
             old_suricata_rulelist = suricata_rulelist
             suricata_rule_file = open(suricata_rulefile_path, "r+")
@@ -132,11 +131,19 @@ while flag:
             suricata_rule_file.close()
 
             # restart suricata
+            if suricata_status == True:
+                # stop suricata
+                subprocess.run(shlex.split("systemctl stop suricata"))
+            
+            # start suricata
+            subprocess.run(shlex.split("systemctl start suricata"))
+            suricata_status = True
             
 
     
     elif agent_dict["services"]["suricata"]["active"] == False and suricata_status == True:
         # turn off suricata
+        subprocess.run(shlex.split("systemctl stop suricata"))
         suricata_status = False
 
     
