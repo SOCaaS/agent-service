@@ -158,8 +158,23 @@ def main():
             print("Tshark status: " + str(tshark_status))
             print("Suricata status: " + str(suricata_status))
 
+            # CPU & Memory
+            cpu = subprocess.check_output("top -b -n1 | grep ^%Cpu | awk '{print 100-$8}'", shell=True).strip().decode()
+            memory = subprocess.check_output("free -t | awk 'FNR == 2 {print $3/$2*100}'", shell=True).strip().decode()
+
+            # build json
+            data = {
+                "cpu": cpu,
+                "memory": memory
+            }
+            data = json.dumps(data)
+
+            # update cpu and memory
+            headers = {"kbn-xsrf": "reporting", "Content-Type": "application/json"}
+            req = requests.post(hostname + "/api/agent_controller/"+agent_id+"/usage", auth=(username, password), headers=headers, data=data)
+
             # wait 120 seconds
-            time.sleep(120)
+            time.sleep(int(agent_dict["time"].replace("m",""))*60)
             
 
     # try to cleanup on keyboard interrupt
