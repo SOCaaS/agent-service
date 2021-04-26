@@ -1,9 +1,9 @@
 import requests, json, time, dotenv, os, subprocess, shlex, sys
-import create_index
+import function
 # use subprocess
 def main():
     # checking if index exist and load environment variable
-    if not create_index.create_index(): 
+    if not function.create_index(): 
         print("Creating Index!")
     
     flag = True
@@ -179,7 +179,7 @@ def main():
             req = requests.post(hostname + "/api/agent_controller/"+agent_id+"/delete", auth=(username, password), headers=headers)
 
             #Delete from .env file
-            create_index.edit_env("")
+            function.edit_env("")
 
             sys.exit(0)
         except SystemExit:
