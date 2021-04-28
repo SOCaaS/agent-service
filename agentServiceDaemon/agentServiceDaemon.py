@@ -29,7 +29,7 @@ def main():
         for r in range(3):
             req = requests.get(hostname + "/api/agent_controller/" + agent_id, auth=(username, password))
             if req.status_code == 200 :
-                break
+                break   
 
         agent_dict = json.loads(req.text)
         for i in agent_dict["services"]["tshark"]["rules"]:

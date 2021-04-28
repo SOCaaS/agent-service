@@ -112,6 +112,7 @@ mv agentServiceDaemon /
 systemctl daemon-reload
 
 systemctl stop suricatadaemon.service
+systemctl stop suricata
 
 systemctl start agentServiceDaemon.service
 
