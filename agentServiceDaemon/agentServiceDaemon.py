@@ -141,16 +141,19 @@ def main():
                     # restart suricata
                     if suricata_status == True:
                         # stop suricata
+                        subprocess.run(shlex.split("systemctl stop suricatadaemon.service"))
                         subprocess.run(shlex.split("systemctl stop suricata"))
                     
                     # start suricata
                     subprocess.run(shlex.split("systemctl start suricata"))
+                    subprocess.run(shlex.split("systemctl start suricatadaemon.service"))
                     suricata_status = True
                     
 
             
             elif agent_dict["services"]["suricata"]["active"] == False and suricata_status == True:
                 # turn off suricata
+                subprocess.run(shlex.split("systemctl stop suricatadaemon.service"))
                 subprocess.run(shlex.split("systemctl stop suricata"))
                 suricata_status = False
 
@@ -186,7 +189,9 @@ def main():
                 if i["active"] == True:
                     i["process"].terminate()
                     i["active"] = False
+            subprocess.run(shlex.split("systemctl stop suricatadaemon.service"))
             subprocess.run(shlex.split("systemctl stop suricata"))
+            
 
             #Delete id on exit
             print("\nDelete elasticsearch document on exit")
