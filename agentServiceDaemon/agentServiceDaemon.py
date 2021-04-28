@@ -22,7 +22,7 @@ def main():
         old_suricata_rulelist = [{}]
         tshark_status = False
         suricata_status = False
-        agentService_status = True
+        agentService_status = False
         suricata_process = ""
         counter = 0
         
@@ -54,6 +54,21 @@ def main():
 
             # used for iteration
             counter = 0
+
+            # check if need to turn on agentservice
+            if agent_dict["active"] == True and agentService_status == False:
+                # turn on filebeat
+                subprocess.run(shlex.split("systemctl start filebeat"))
+            
+            # check if need to turn off agentservice
+            elif  agent_dict["active"] == False:
+                if agentService_status == True:
+                    # turn off filebeat
+                    subprocess.run(shlex.split("systemctl start filebeat"))
+
+                # overwrite tshark and suricata activity
+                agent_dict["services"]["tshark"]["active"] = False
+                agent_dict["services"]["suricata"]["active"] = False
 
             # check if tshark is active
             if agent_dict["services"]["tshark"]["active"]:
