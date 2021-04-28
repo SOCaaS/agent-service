@@ -58,13 +58,13 @@ def main():
             # check if need to turn on agentservice
             if agent_dict["active"] == True and agentService_status == False:
                 # turn on filebeat
-                subprocess.run(shlex.split("systemctl start filebeat"))
+                subprocess.run(shlex.split("service filebeat start"))
             
             # check if need to turn off agentservice
             elif  agent_dict["active"] == False:
                 if agentService_status == True:
                     # turn off filebeat
-                    subprocess.run(shlex.split("systemctl start filebeat"))
+                    subprocess.run(shlex.split("service filebeat stop"))
 
                 # overwrite tshark and suricata activity
                 agent_dict["services"]["tshark"]["active"] = False
