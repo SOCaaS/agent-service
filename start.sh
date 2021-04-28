@@ -76,7 +76,7 @@ cp suricatadaemon.service /etc/systemd/system/
 
 # systemctl start suricatadaemon.service
 
-service filebeat start
+# service filebeat start
 
 apt -y install mysql-server
 
