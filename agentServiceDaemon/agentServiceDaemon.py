@@ -22,8 +22,10 @@ def main():
         old_suricata_rulelist = [{}]
         tshark_status = False
         suricata_status = False
+        agentService_status = True
         suricata_process = ""
         counter = 0
+        
 
         # build tshark_rules
         for r in range(3):
@@ -72,6 +74,7 @@ def main():
                     # apply changes
                     else:
                         if tshark_rules[counter]["active"] == True:
+                            print("Terminating: " + tshark_rules[counter]["details"])
                             tshark_rules[counter]["process"].terminate()
                         tshark_rules[counter]["active"] = i["active"]
                         tshark_rules[counter]["details"] = i["details"]
@@ -83,6 +86,7 @@ def main():
                                 # run process
                                 process_details = shlex.split(i["details"])
                                 tshark_rules[counter]["process"] = subprocess.Popen(process_details)
+                                print("Running: " + i["details"])
 
                                 # check if process does not run
                                 if tshark_rules[counter]["process"].poll() != None:
@@ -99,6 +103,7 @@ def main():
                                 if tshark_rules[counter]["process"].poll() == None:
                                     # try to terminate
                                     tshark_rules[counter]["process"].terminate()
+                                    print("Terminating: " + tshark_rules[counter]["details"])
                             except:
                                 print("Unable to terminate rule " + str(counter) + ": " +  i["details"])
                                         
@@ -113,6 +118,7 @@ def main():
                 for i in tshark_rules:
                     if i["active"] == True:
                         i["process"].terminate()
+                        print("Terminating: " + i["details"])
                         i["active"] = False
 
             # check if suricata is active
@@ -126,6 +132,7 @@ def main():
                         continue
                     else:
                         suricata_rulelist.append(i["details"].replace("$interface", agent_dict["interface"]))
+                        print("Appending rule: " + i["details"])
                 
                 # check for changes and apply changes to file
                 if suricata_rulelist != old_suricata_rulelist:
@@ -143,8 +150,10 @@ def main():
                         # stop suricata
                         subprocess.run(shlex.split("systemctl stop suricatadaemon.service"))
                         subprocess.run(shlex.split("systemctl stop suricata"))
+                        print("Stopped Suricata")
                     
                     # start suricata
+                    print("Starting Suricata")
                     subprocess.run(shlex.split("systemctl start suricata"))
                     subprocess.run(shlex.split("systemctl start suricatadaemon.service"))
                     suricata_status = True
@@ -155,6 +164,7 @@ def main():
                 # turn off suricata
                 subprocess.run(shlex.split("systemctl stop suricatadaemon.service"))
                 subprocess.run(shlex.split("systemctl stop suricata"))
+                print("Stopped Suricata")
                 suricata_status = False
 
             # print status
@@ -188,9 +198,11 @@ def main():
             for i in tshark_rules:
                 if i["active"] == True:
                     i["process"].terminate()
+                    print("Terminating: " + i["details"])
                     i["active"] = False
             subprocess.run(shlex.split("systemctl stop suricatadaemon.service"))
             subprocess.run(shlex.split("systemctl stop suricata"))
+            print("Stopped Suricata")
             
 
             #Delete id on exit
