@@ -3,6 +3,7 @@ Description=Agent service daemon used to control the agent
 
 [Service]
 ExecStart=/usr/bin/python3 /agentServiceDaemon/agentServiceDaemon.py
+WorkingDirectory=/agentServiceDaemon/
 
 [Install]
 WantedBy=multi-user.target
