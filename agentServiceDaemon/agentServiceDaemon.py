@@ -44,7 +44,7 @@ def main():
 
             # check status code
             if req.status_code != 200:
-                print("Error" + req.status_code)
+                print("Error" + str(req.status_code))
                 flag = False
 
             print(req.text)
@@ -74,56 +74,72 @@ def main():
             if agent_dict["services"]["tshark"]["active"]:
                 tshark_status = True
 
-                # iterate over the tshark rules
-                for i in agent_dict["services"]["tshark"]["rules"]:
-                    i["details"].replace("$interface", agent_dict["interface"])
-                    
-                    # check if old and new is the same
-                    if i["active"] == tshark_rules[counter]["active"] and i["details"] == tshark_rules[counter]["details"]:
-                        continue
-                    
-                    # check if both old and new is inactive
-                    elif i["active"] == tshark_rules[counter]["active"] and i["active"] == False:
-                        continue
+                # check if tshark rules are not empty
+                if len(agent_dict["services"]["tshark"]["rules"]) != 0:
+                    # iterate over the tshark rules
+                    for i in agent_dict["services"]["tshark"]["rules"]:
+                        
+                        # replace $interface with interface in agent_dict
+                        i["details"] = i["details"].replace("$interface", agent_dict["interface"])
+                        
+                        # check if old and new is the same
+                        if i["active"] == tshark_rules[counter]["active"] and i["details"] == tshark_rules[counter]["details"]:
+                            continue
+                        
+                        # check if both old and new is inactive
+                        elif i["active"] == tshark_rules[counter]["active"] and i["active"] == False:
+                            continue
 
-                    # apply changes
-                    else:
-                        if tshark_rules[counter]["active"] == True:
-                            print("Terminating: " + tshark_rules[counter]["details"])
-                            tshark_rules[counter]["process"].terminate()
-                        tshark_rules[counter]["active"] = i["active"]
-                        tshark_rules[counter]["details"] = i["details"]
-                        
-                        
-                        if i["active"] == True:
+                        # apply changes
+                        else:
+                            if tshark_rules[counter]["active"] == True:
+                                print("Terminating: " + tshark_rules[counter]["details"])
+                                tshark_rules[counter]["process"].terminate()
+                            tshark_rules[counter]["active"] = i["active"]
+                            tshark_rules[counter]["details"] = i["details"]
                             
-                            try:
-                                # run process
-                                process_details = shlex.split(i["details"])
-                                tshark_rules[counter]["process"] = subprocess.Popen(process_details)
-                                print("Running: " + i["details"])
+                            
+                            if i["active"] == True:
+                                
+                                try:
+                                    # run process
+                                    process_details = shlex.split(i["details"])
+                                    tshark_rules[counter]["process"] = subprocess.Popen(process_details)
+                                    print("Running: " + i["details"])
 
-                                # check if process does not run
-                                if tshark_rules[counter]["process"].poll() != None:
+                                    # check if process does not run
+                                    if tshark_rules[counter]["process"].poll() != None:
+                                        print("Tshark error at rule " + str(counter) + ": " +  i["details"])
+                                        tshark_rules[counter]["active"] = False
+
+                                except:
                                     print("Tshark error at rule " + str(counter) + ": " +  i["details"])
                                     tshark_rules[counter]["active"] = False
+                                
+                            else:
+                                try:
+                                    # check if process is running
+                                    if tshark_rules[counter]["process"].poll() == None:
+                                        # try to terminate
+                                        tshark_rules[counter]["process"].terminate()
+                                        print("Terminating: " + tshark_rules[counter]["details"])
+                                except:
+                                    print("Unable to terminate rule " + str(counter) + ": " +  i["details"])
+                                            
 
-                            except:
-                                print("Tshark error at rule " + str(counter) + ": " +  i["details"])
-                                tshark_rules[counter]["active"] = False
-                            
-                        else:
-                            try:
-                                # check if process is running
-                                if tshark_rules[counter]["process"].poll() == None:
-                                    # try to terminate
-                                    tshark_rules[counter]["process"].terminate()
-                                    print("Terminating: " + tshark_rules[counter]["details"])
-                            except:
-                                print("Unable to terminate rule " + str(counter) + ": " +  i["details"])
-                                        
+                        counter += 1
+                else:
+                    # check and delete any active rule
+                    for i in tshark_rules:
+                        try:
+                            # check if process is running
+                            if i["process"].poll() == None:
+                                # try to terminate
+                                i["process"].terminate()
+                                print("Terminating: " + i["details"])
+                        except:
+                            print("Unable to terminate rule " + str(counter) + ": " +  i["details"])
 
-                    counter += 1
             
             # if tshark needs to be turned off
             elif agent_dict["services"]["tshark"]["active"] == False and tshark_status == True:
@@ -156,7 +172,7 @@ def main():
                     suricata_rule_file.read()
                     suricata_rule_file.seek(0)
                     for i in suricata_rulelist:
-                        suricata_rule_file.write(i)
+                        suricata_rule_file.write(i + "\n")
                     suricata_rule_file.truncate()
                     suricata_rule_file.close()
 

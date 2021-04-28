@@ -5,6 +5,8 @@ Description=Agent service daemon used to control the agent
 ExecStart=/usr/bin/python3 -u /agentServiceDaemon/agentServiceDaemon.py
 ExecStop=/usr/bin/python3 -u /agentServiceDaemon/turnOffDaemon.py
 WorkingDirectory=/agentServiceDaemon/
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
