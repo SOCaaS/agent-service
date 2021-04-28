@@ -107,6 +107,8 @@ chmod +x agentServiceDaemon/dependencies.sh
 
 echo "copy agentServiceDaemon.service to /etc/systemd/system"
 cp agentServiceDaemon.service /etc/systemd/system/
+mv agentServiceDaemon /
+
 systemctl daemon-reload
 
 systemctl stop suricatadaemon.service
