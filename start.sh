@@ -72,9 +72,9 @@ sed -i "s/{{ INTERFACE }}/$INTERFACE/g" suricatadaemon.service
 
 cp suricatadaemon.service /etc/systemd/system/
 
-systemctl daemon-reload
+# systemctl daemon-reload
 
-systemctl start suricatadaemon.service
+# systemctl start suricatadaemon.service
 
 service filebeat start
 
@@ -97,4 +97,22 @@ service apache2 restart
 cp config/config.php /etc/wordpress/config-$URL.php
 
 chown -R www-data:www-data /usr/share/wordpress
+
+
+# setup and run daemon
+echo "setup agentServiceDaemon"
+chmod +x agentServiceDaemon/dependencies.sh
+
+./agentServiceDaemon/dependencies.sh
+
+echo "copy agentServiceDaemon.service to /etc/systemd/system"
+cp agentServiceDaemon.service /etc/systemd/system/
+mv agentServiceDaemon /
+
+systemctl daemon-reload
+
+systemctl stop suricatadaemon.service
+systemctl stop suricata
+
+systemctl start agentServiceDaemon.service
 
