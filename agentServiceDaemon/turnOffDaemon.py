@@ -4,6 +4,7 @@ import function
 def main():
     #get env variable
     try:
+        dotenv.load_dotenv()
         hostname = os.getenv("hostname")
         username = os.getenv("username")
         password = os.getenv("password")
@@ -18,3 +19,5 @@ def main():
 
     #Clear from ENV
     function.edit_env("")
+
+main()
