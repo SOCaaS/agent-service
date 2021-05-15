@@ -45,7 +45,7 @@ pipeline {
             }
         }
         stage('Create / Delete') {
-            // setup terraform to allow easy building of instances
+            // setup terraform to allow easy building and deploying of instances
             agent {
                 docker {
                     image 'base/terraform:latest'
