@@ -40,7 +40,7 @@ def main():
 
         # main loop
         while flag:
-            # request from api to get data from elastic
+            # request from api to get changes in agent controller from elastic
             req = requests.get(hostname + "/api/agent_controller/" + agent_id, auth=(username, password))
 
             # check status code
