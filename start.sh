@@ -37,6 +37,7 @@ sed -i "s/{{ LOGSTASH_URI }}/$LOGSTASH_URI/g" filebeat.yml
 sed -i "s/{{ LOGSTASH_PORT }}/$LOGSTASH_PORT/g" filebeat.yml
 cp filebeat.yml /etc/filebeat/filebeat.yml
 
+# install tshark
 echo "installing tshark"
 DEBIAN_FRONTEND=noninteractive apt install -y tshark
 
@@ -50,6 +51,7 @@ sed -i "s/{{ TSHARK_INTERFACE }}/$INTERFACE/g" tshark.sh
 chmod +x tshark.sh
 cp tshark.sh /tshark
 
+# install suricata
 add-apt-repository ppa:oisf/suricata-stable -y
 
 apt update
@@ -78,6 +80,7 @@ cp suricatadaemon.service /etc/systemd/system/
 
 # service filebeat start
 
+# install mysql-server wordpress and apache2
 apt -y install mysql-server
 
 apt -y install wordpress
