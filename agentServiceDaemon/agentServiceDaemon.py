@@ -38,8 +38,9 @@ def main():
             tshark_rules[counter]["active"] = False
             counter += 1
 
+        # main loop
         while flag:
-            # request from api
+            # request from api to get data from elastic
             req = requests.get(hostname + "/api/agent_controller/" + agent_id, auth=(username, password))
 
             # check status code

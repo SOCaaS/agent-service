@@ -6,7 +6,8 @@ pipeline {
     }
     stages {
         stage('Install') {
-            steps {
+            // stage to install docker compose
+            steps {                
                 echo 'Installing....'
                 sh '''#!/bin/bash
                     if [ ! -f /usr/bin/docker-compose ]; then
@@ -20,14 +21,16 @@ pipeline {
             }
         }
         stage('Build') {
-            steps {
+            // stage to build the agent using docker compose
+            steps {                
                 echo 'Building..'
                 sh 'echo ${BUILD_NUMBER}'
                 sh 'TAG=${BUILD_NUMBER} /usr/bin/docker-compose -p "agent" build'
            }
         }
         stage('Test') {
-            steps {
+            // stage to test the docker instance
+            steps {                
                 echo 'Testing..'
                 sh 'echo ${BUILD_NUMBER}'
                 sh 'docker run --name test-filebeat-${BUILD_NUMBER} --network main-overlay agent-service:${BUILD_NUMBER} filebeat test config'
@@ -35,12 +38,14 @@ pipeline {
            }
         }
         stage('Deploy') {
+            // stage to build and deploy the docker
             steps {
                 echo 'Deploying....'
                 sh 'TAG=${BUILD_NUMBER} /usr/bin/docker-compose -p "agent" up -d --build'
             }
         }
         stage('Create / Delete') {
+            // setup terraform to allow easy building of instances
             agent {
                 docker {
                     image 'base/terraform:latest'

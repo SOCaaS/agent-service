@@ -1,6 +1,7 @@
 import requests, json, time, dotenv, os, subprocess, shlex, sys
 import function
 
+# functiion used to cleanup after agentServiceDaemon finishes
 def main():
     #get env variable
     try:
