@@ -1,8 +1,12 @@
 import requests, json, time, dotenv, os, subprocess, shlex, sys
 import function
-# use subprocess
+"""
+This is a daemon used for controlling agents in a server.
+It takes parameters from the .env file to connect to elastic and modify suricata rules.
+Elastic is used to store configurations for the specific agent and is modified in Kibana.
+"""
 def main():
-    # checking if index exist and load environment variable
+    # Create an index if an index is not found.
     if not function.create_index(): 
         print("Creating Index!")
     
@@ -17,7 +21,8 @@ def main():
             suricata_rulefile_path = os.getenv("suricata_rulefile_path")
         except:
             print("env file error")
-
+        
+        # lists used to store tshark and suricata rules and processes
         tshark_rules = [{}]
         old_suricata_rulelist = [{}]
         tshark_status = False
@@ -27,23 +32,25 @@ def main():
         counter = 0
         
 
-        # build tshark_rules
+        # try to get request 3 times in case of get failure.
         for r in range(3):
             req = requests.get(hostname + "/api/agent_controller/" + agent_id, auth=(username, password))
             if req.status_code == 200 :
                 break   
-
+        
+        # generate tshark rules from get request with active set to false
         agent_dict = json.loads(req.text)
         for i in agent_dict["services"]["tshark"]["rules"]:
             tshark_rules[counter]["active"] = False
             counter += 1
 
-        # main loop
+        
+        # main body loop
         while flag:
-            # request from api to get changes in agent controller from elastic
+            # request from api to get agent configurations from elastic
             req = requests.get(hostname + "/api/agent_controller/" + agent_id, auth=(username, password))
 
-            # check status code
+            # check status code of request.
             if req.status_code != 200:
                 print("Error" + str(req.status_code))
                 flag = False
@@ -83,7 +90,7 @@ def main():
                         # replace $interface with interface in agent_dict
                         i["details"] = i["details"].replace("$interface", agent_dict["interface"])
                         
-                        # check if old and new is the same
+                        # check if old and new rule is the same
                         if i["active"] == tshark_rules[counter]["active"] and i["details"] == tshark_rules[counter]["details"]:
                             continue
                         
@@ -91,7 +98,7 @@ def main():
                         elif i["active"] == tshark_rules[counter]["active"] and i["active"] == False:
                             continue
 
-                        # apply changes
+                        # else apply changes from elastic using subprocess
                         else:
                             if tshark_rules[counter]["active"] == True:
                                 print("Terminating: " + tshark_rules[counter]["details"])
@@ -99,11 +106,11 @@ def main():
                             tshark_rules[counter]["active"] = i["active"]
                             tshark_rules[counter]["details"] = i["details"]
                             
-                            
+                            # if active
                             if i["active"] == True:
                                 
                                 try:
-                                    # run process
+                                    # run and store process
                                     process_details = shlex.split(i["details"])
                                     tshark_rules[counter]["process"] = subprocess.Popen(process_details)
                                     print("Running: " + i["details"])
@@ -116,7 +123,8 @@ def main():
                                 except:
                                     print("Tshark error at rule " + str(counter) + ": " +  i["details"])
                                     tshark_rules[counter]["active"] = False
-                                
+                            
+                            # if inactive
                             else:
                                 try:
                                     # check if process is running
@@ -218,7 +226,7 @@ def main():
             headers = {"kbn-xsrf": "reporting", "Content-Type": "application/json"}
             req = requests.post(hostname + "/api/agent_controller/"+agent_id+"/usage", auth=(username, password), headers=headers, data=data)
 
-            # wait 120 seconds
+            # wait for a period amount of time specified in elastic
             time.sleep(int(agent_dict["time"].replace("m",""))*60)
             
 
