@@ -43,6 +43,7 @@ def main():
         for i in agent_dict["services"]["tshark"]["rules"]:
             tshark_rules[counter]["active"] = False
             counter += 1
+
         
         # main body loop
         while flag:

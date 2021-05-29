@@ -1,5 +1,6 @@
 import requests, json, time, dotenv, os, subprocess, shlex, sys
 
+# function used to add agent_id to the .env file
 def edit_env(agent_id):
     envFile = open(".env", "r")
     envData = envFile.readlines()
@@ -15,6 +16,7 @@ def edit_env(agent_id):
 
     envFile.close()
 
+# function used to create an index in elastic
 def create_index():
     # load .env file
     try:

@@ -1,3 +1,4 @@
+# dockerfile used to setup agentservice similar to start.sh (Not updated to implement agentServiceDaemon)
 FROM base/ubuntu-supervisor:latest
 
 ARG INTERFACE
@@ -9,6 +10,7 @@ ARG DOCKER_URL
 
 LABEL type="agent-service"
 
+# update, upgrade and install dependencies
 RUN apt update
 
 RUN apt upgrade -y
@@ -21,6 +23,7 @@ RUN apt install -y apt-transport-https
 
 RUN echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-7.x.list
 
+# install and configure filebeat to ship logs and data from suricata and tshark
 RUN apt update
 
 RUN apt install -y filebeat
@@ -31,10 +34,14 @@ RUN sed -i "s/{{ LOGSTASH_URI }}/$LOGSTASH_URI/g" /etc/filebeat/filebeat.yml
 
 RUN sed -i "s/{{ LOGSTASH_PORT }}/$LOGSTASH_PORT/g" /etc/filebeat/filebeat.yml
 
+# installing tshark
+# tshark will be used to monitor and capture data from the network
 RUN apt install -y tshark
 
 RUN mkdir /tshark
 
+# install and configure suricata
+# Suricata will be used as an IDS with default rule of detecting DOS
 RUN apt update
 
 RUN apt-get install software-properties-common -y
@@ -59,7 +66,7 @@ RUN suricata-update
 
 # RUN filebeat modules enable suricata
 
-# Install wordpress, mysql server and apache2
+# installing mysql, wordpress and apache2 to simulate a blog website being under attack.
 
 RUN apt update
 
@@ -87,6 +94,7 @@ RUN usermod -d /var/lib/mysql/ mysql
 
 RUN service mysql start; mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'whenguardian2021';GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
 
+# setup supervisord to allow services to run in background
 ADD supervisord /etc/supervisor/conf.d/
 
 # RUN filebeat modules enable apache
